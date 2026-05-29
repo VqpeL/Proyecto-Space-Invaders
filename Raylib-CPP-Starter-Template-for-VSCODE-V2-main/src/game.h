@@ -18,6 +18,7 @@ typedef struct Nave{
     float alto;
 
     bool activo;
+    Texture2D textura;
 };
 
 typedef struct Alien{
@@ -30,6 +31,7 @@ typedef struct Alien{
     float alto;
 
     bool activo;
+    Texture2D textura;
 };
 
 typedef struct Laser{
@@ -37,8 +39,6 @@ typedef struct Laser{
     float y;
 
     float vel;
-    float ancho;
-    float alto;
 
     bool activo;
 };
@@ -49,6 +49,7 @@ typedef struct AlienGrid{
     int num_filas;
 
     float dirX;
+    float vel;
 };
 
 typedef struct ListaLaser{
