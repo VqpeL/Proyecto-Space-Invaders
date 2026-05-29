@@ -9,8 +9,8 @@
 #define MAX_SCORES 10
 
 typedef struct Nave{
-    int x;
-    int y;
+    float x;
+    float y;
     int vidas;
 
     float vel;
@@ -21,8 +21,8 @@ typedef struct Nave{
 };
 
 typedef struct Alien{
-    int x;
-    int y;
+    float x;
+    float y;
     int puntos;
 
     float vel;
@@ -33,8 +33,8 @@ typedef struct Alien{
 };
 
 typedef struct Laser{
-    int x;
-    int y;
+    float x;
+    float y;
 
     float vel;
     float ancho;
