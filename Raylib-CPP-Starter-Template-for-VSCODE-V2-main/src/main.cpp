@@ -53,9 +53,12 @@ int main(){
 
         EndDrawing();
     }
-    UnloadFont(fuente);
-    UnloadTexture(Jugador.textura);
-    for(int i = 0; i < grid.num_filas; i++) free(grid.aliens[i]);
+    UnloadFont(fuente); // Descargar fuente
+    UnloadTexture(Jugador.textura);// Descargar texturas de nave
+    for(int i =0; i < 3; i++){
+        UnloadTexture(grid.textura[i]); // Descargar texturas de aliens
+    }
+    for(int i = 0; i < grid.num_filas; i++)free(grid.aliens[i]);
     free(grid.aliens); // Libera la memoria del malloc que se hace en iniciaAlienGrid
     CloseWindow();
 
@@ -110,6 +113,11 @@ void iniciaAlienGrid(AlienGrid &grid, int filas , int col){
     grid.dirX = 1; // Si direccion esta en 1 se mueve a la derecha. Si esta en -1 se mueve a la izquierda
     grid.vel = 2.0f;
 
+    grid.textura[0] = LoadTexture("assets/graficos/alien_1.png");
+    grid.textura[1] = LoadTexture("assets/graficos/alien_2.png");
+    grid.textura[2] = LoadTexture("assets/graficos/alien_3.png");
+
+
     grid.aliens = (Alien**)malloc(filas * (sizeof(Alien*)));
 
     for(int i = 0; i< filas; i++){
@@ -121,7 +129,15 @@ void iniciaAlienGrid(AlienGrid &grid, int filas , int col){
             grid.aliens[i][j].x = j * (30 + 15) + 50;
             grid.aliens[i][j].y = i * (20 + 15) + 50;
             grid.aliens[i][j].activo = true;
-            grid.aliens[i][j].textura = LoadTexture("assets/graficos/alien_1.png");
+
+            if(i == 0){
+                grid.aliens[i][j].tipo = 0;
+            }
+            else if(i == 1 || i == 2){
+                grid.aliens[i][j].tipo = 1;
+            }else{
+                grid.aliens[i][j].tipo = 2;
+            }
         }
     }
 }
@@ -154,12 +170,29 @@ void dibujarAlienGrid(AlienGrid &grid){
     for(int i =0; i < grid.num_filas; i++){
         for(int j = 0; j < grid.num_col; j++){
             if(grid.aliens[i][j].activo == true){
+                int tipoAlien = grid.aliens[i][j].tipo;
+                if(tipoAlien == 0){
                 DrawTexture(
-                    grid.aliens[i][j].textura,
-                    grid.aliens[i][j].x,
-                    grid.aliens[i][j].y,
-                    RED
-                );
+                        grid.textura[tipoAlien],
+                        grid.aliens[i][j].x,
+                        grid.aliens[i][j].y,
+                        RED
+                    );
+                }else if(tipoAlien == 1){
+                    DrawTexture(
+                        grid.textura[tipoAlien],
+                        grid.aliens[i][j].x,
+                        grid.aliens[i][j].y,
+                        WHITE
+                    );
+                }else{
+                    DrawTexture(
+                        grid.textura[tipoAlien],
+                        grid.aliens[i][j].x,
+                        grid.aliens[i][j].y,
+                        PURPLE
+                    );
+                }
             }
         }
     }
