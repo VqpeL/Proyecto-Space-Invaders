@@ -8,7 +8,7 @@
 #define MAX_LASERS 50
 #define MAX_SCORES 10
 
-typedef struct Nave{
+struct Nave{
     float x;
     float y;
     int vidas;
@@ -21,7 +21,7 @@ typedef struct Nave{
     Texture2D textura;
 };
 
-typedef struct Alien{
+struct Alien{
     float x;
     float y;
     
@@ -35,7 +35,7 @@ typedef struct Alien{
     bool activo;
 };
 
-typedef struct Laser{
+struct Laser{
     float x;
     float y;
 
@@ -44,7 +44,7 @@ typedef struct Laser{
     bool activo;
 };
 
-typedef struct AlienGrid{
+struct AlienGrid{
     Alien** aliens;
     int num_col;
     int num_filas;
@@ -54,13 +54,13 @@ typedef struct AlienGrid{
     Texture2D textura[3];
 };
 
-typedef struct ListaLaser{
+struct ListaLaser{
     Laser lasers [MAX_LASERS];
     
     int cont;
 };
 
-typedef struct EstadoJuego{
+struct EstadoJuego{
     int nivel;
     int vidas;
     int puntaje;
@@ -69,7 +69,7 @@ typedef struct EstadoJuego{
     bool ganar;
 };
 
-typedef struct HighScore{
+struct HighScore{
     char nombre[50];
     char fecha[20];
 
@@ -78,7 +78,8 @@ typedef struct HighScore{
 
 extern Nave Jugador;
 extern Laser JugadorLaser, AlienLaser;
-extern AlienGrid alienGrid;
+extern ListaLaser lista;
+extern AlienGrid grid;
 extern EstadoJuego estadoJuego;
 extern Sound laserSound, explosionSound;
 extern Music bgmusic;
