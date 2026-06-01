@@ -78,7 +78,8 @@ typedef struct HighScore{
 
 extern Nave Jugador;
 extern Laser JugadorLaser, AlienLaser;
-extern AlienGrid alienGrid;
+extern ListaLaser lista;
+extern AlienGrid grid;
 extern EstadoJuego estadoJuego;
 extern Sound laserSound, explosionSound;
 extern Music bgmusic;
