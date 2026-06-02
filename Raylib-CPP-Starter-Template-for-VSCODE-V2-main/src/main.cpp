@@ -80,10 +80,10 @@ void iniciaNave(Nave &Jugador){
 }
 
 void actualizarNave(Nave &Jugador){
-    if(IsKeyDown(KEY_A)){
+    if(IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)){
         Jugador.x -= Jugador.vel; //Moviemiento a la izquierda
     }
-    if(IsKeyDown(KEY_D)){
+    if(IsKeyDown(KEY_D)|| IsKeyDown(KEY_RIGHT)){
         Jugador.x += Jugador.vel; //Moviemiento a la derecha
     }
     
