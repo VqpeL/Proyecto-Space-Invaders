@@ -1,7 +1,15 @@
+//COSAS POR HACER: 
+/*  -Sistema de Record
+    -Que los aliens disparen y le bajen la vida al jugador
+    -Que si los aliens llegan hasta abajo sea gameover. 
+    -Pantalla de inicio y Gameover
+    -Covertura para el jugador */
+
+
+
 #include <raylib.h>
 #include <cstdlib>
 #include "game.h"
-
 
 void iniciaNave(Nave &Jugador);
 void actualizarNave(Nave &Jugador);
@@ -14,6 +22,8 @@ void disparoLaser(ListaLaser &lista, float x, float y);
 void disparoNave(Nave &Jugador, ListaLaser &lista);
 void actualizarLaser(ListaLaser &lista);
 void dibujarLasers(const ListaLaser &lista);
+void colisionLaserAlien(ListaLaser &lista, AlienGrid &grid); 
+void colisionAlienNave (Nave &Jugador, AlienGrid &grid); 
 
 int main(){
     Color gris{29, 29, 27, 255};
@@ -31,13 +41,20 @@ int main(){
     iniciaLasers(lista);
     while(WindowShouldClose() == false){
 
+       if (Jugador.activo==true){
         actualizarNave(Jugador);
         disparoNave(Jugador, lista);
+       }
         actualizarLaser(lista);
         actualizarAlienGrid(grid);
 
+        colisionLaserAlien(lista, grid);
+        colisionAlienNave(Jugador, grid); 
         BeginDrawing();
         ClearBackground(gris);
+
+        DrawText(TextFormat("VIDAS: %i", Jugador.vidas), 20, 20, 30, RED);
+
         DrawTextEx(
             fuente,
             "SPACE INVADERS",
@@ -99,12 +116,17 @@ void actualizarNave(Nave &Jugador){
 }
 
 void dibujarNave(Nave const &Jugador){//const porque solo se necesita la lectura de los daros del struct
+ if(Jugador.activo == false){
+        return;
+    }
+
     DrawTexture(
         Jugador.textura,
         Jugador.x,
         Jugador.y, 
         ORANGE
-    );
+        );
+
 }
 
 void iniciaAlienGrid(AlienGrid &grid, int filas , int col){
@@ -248,6 +270,86 @@ void dibujarLasers(const ListaLaser &lista){
                 16,
                 BLUE
             );
+        }
+    }
+}
+
+void colisionLaserAlien(ListaLaser &lista, AlienGrid &grid){
+
+        // Recorre todos los láseres disponibles y solo los que estan aún
+    for(int i = 0; i < MAX_LASERS; i++){
+        if(lista.lasers[i].activo == true){
+
+            // Crea el área de colisión del láser, pero la hace invisible para que no se note. 
+            Rectangle rectLaser = {
+                lista.lasers[i].x,
+                lista.lasers[i].y,
+                4,
+                16
+            };
+
+        // Recorre todas las filas y columnas de aliens y busca solo activos. 
+            for(int fila = 0; fila < grid.num_filas; fila++){
+                for(int col = 0; col < grid.num_col; col++){
+                    if(grid.aliens[fila][col].activo == true){
+
+                        // crea la colision de cada alien
+                        Rectangle rectAlien = {
+                            grid.aliens[fila][col].x,
+                            grid.aliens[fila][col].y,
+                            grid.aliens[fila][col].ancho,
+                            grid.aliens[fila][col].alto
+                        };
+
+                        // Con esto se revisa si se tocan. 
+                        if(CheckCollisionRecs(rectLaser, rectAlien)){
+                            lista.lasers[i].activo = false;
+                            grid.aliens[fila][col].activo = false;
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void colisionAlienNave(Nave &Jugador, AlienGrid &grid){
+        if(Jugador.activo == false){
+        return;
+    }
+    
+// Crea el rectángulo de colisión de la nave
+    Rectangle rectNave = {
+        Jugador.x,
+        Jugador.y,
+        Jugador.ancho,
+        Jugador.alto
+    };
+
+    for(int fila = 0; fila < grid.num_filas; fila++){
+        for(int col = 0; col < grid.num_col; col++){
+            
+            if(grid.aliens[fila][col].activo == true){
+                
+                Rectangle rectAlien = {
+                    grid.aliens[fila][col].x,
+                    grid.aliens[fila][col].y,
+                    grid.aliens[fila][col].ancho,
+                    grid.aliens[fila][col].alto
+                };
+
+                if(CheckCollisionRecs(rectNave, rectAlien)){
+                    Jugador.vidas--;
+                    grid.aliens[fila][col].activo = false;
+
+                    if(Jugador.vidas <= 0){
+                        Jugador.vidas = 0; 
+                        Jugador.activo = false;
+                    }
+                    return; 
+                }
+            }
         }
     }
 }
