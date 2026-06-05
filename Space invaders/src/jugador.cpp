@@ -4,6 +4,7 @@ void InicializarNave(Nave *nave, int anchoPantalla, int altoPantalla) {
     nave->ancho = 50.0f;
     nave->alto = 25.0f;
     nave->velocidad = 6.0f;
+    nave->vidas=3;
     
     // Centrada abajo
     nave->posicion.x = (float)anchoPantalla / 2.0f - (nave->ancho / 2.0f);

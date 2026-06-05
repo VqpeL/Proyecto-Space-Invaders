@@ -9,6 +9,7 @@ typedef struct {
     float velocidad;
     float ancho;
     float alto;
+    int vidas;
     Texture2D textura;
 } Nave;
 

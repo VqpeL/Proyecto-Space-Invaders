@@ -78,7 +78,7 @@ void ActualizarAlienGrid(AlienGrid *grid,int ancho_pantalla) {
         grid->dirX *= -1; 
         for (int i = 0; i < grid->num_filas; i++) {
             for (int j = 0; j < grid->num_col; j++) {
-                grid->aliens[i][j].y += 5.0f; 
+                grid->aliens[i][j].y += 9.0f; 
             }
         }
     }
@@ -145,4 +145,18 @@ void LiberarAlienGrid(AlienGrid *grid) {
     for (int i = 0; i < 3; i++) {
         UnloadTexture(grid->textura[i]);
     }
+}
+
+bool GridVacia(AlienGrid *grid) {
+    // Si la memoria no está inicializada correctamente, evitamos procesar
+    if (grid->aliens == NULL) return true;
+
+    for (int i = 0; i < grid->num_filas; i++) {
+        for (int j = 0; j < grid->num_col; j++) {
+            if (grid->aliens[i][j].activo) {
+                return false; // Se encontró un alien vivo, no hay victoria todavía
+            }
+        }
+    }
+    return true; // Todos los aliens están muertos
 }

@@ -3,13 +3,15 @@
 #include "jugador.h"
 #include "aliens.h"
 #include "proyectil.h"
+#include "colisiones.h"
 #include <vector>
 
 enum EstadoJuego
 {
     PANTALLA_INICIO,
     PANTALLA_JUEGO,
-    PANTALLA_FINAL
+    PANTALLA_FINAL,
+    PANTALLA_VICTORIA
 };
 
 int main()
@@ -82,6 +84,20 @@ int main()
             ActualizarProyectiles(&balasJugador, altoPantalla);
             ActualizarProyectiles(&balasAliens, altoPantalla);
 
+            ColisionLaserAlien(&balasJugador, &miGrid);
+            ColisionAlienNave(&jugador, &miGrid);
+            ColisionProyectilEnemigoNave(&balasAliens, &jugador);
+
+            if (jugador.vidas <= 0)
+            {
+                estadoActual = PANTALLA_FINAL;
+            }
+
+            if (GridVacia(&miGrid))
+            {
+                estadoActual = PANTALLA_VICTORIA;
+            }
+
             if (IsKeyPressed(KEY_SPACE))
             {
                 Vector2 pos = {jugador.posicion.x + 20, jugador.posicion.y};
@@ -100,6 +116,21 @@ int main()
             if (IsKeyPressed(KEY_G))
             {
                 estadoActual = PANTALLA_FINAL;
+            }
+            break;
+
+        case PANTALLA_VICTORIA:
+            if (IsKeyPressed(KEY_ENTER))
+            {
+                if (!reset)
+                {
+                    LiberarAlienGrid(&miGrid);
+                    LiberarNave(&jugador);
+                    LiberarProyectiles(&balasJugador);
+                    LiberarProyectiles(&balasAliens);
+                    reset = true;
+                }
+                estadoActual = PANTALLA_INICIO;
             }
             break;
 
@@ -146,8 +177,8 @@ int main()
             if (!reset)
             {
                 DrawText("¡AQUÍ ESTÁS JUGANDO!", 20, 20, 20, RAYWHITE);
-                DrawText("Presiona 'G' para simular perder (Game Over)", 20, 60, 20, GRAY);
 
+                DrawText(TextFormat("VIDAS: %d", jugador.vidas), anchoPantalla - 120, 20, 20, RED);
                 DibujarAlienGrid(&miGrid);
 
                 DibujarNave(&jugador);
@@ -156,6 +187,12 @@ int main()
                 DibujarProyectiles(balasAliens, azulCeleste);
             }
 
+            break;
+
+        case PANTALLA_VICTORIA:
+            DrawText("¡VICTORIA!", anchoPantalla / 2 - MeasureText("¡VICTORIA!", 50) / 2, 200, 50, GREEN);
+            DrawText("Has salvado la galaxia", anchoPantalla / 2 - MeasureText("Has salvado la galaxia", 20) / 2, 300, 20, RAYWHITE);
+            DrawText("Presiona ENTER para volver al menú", anchoPantalla / 2 - MeasureText("Presiona ENTER para volver al menú", 20) / 2, 400, 20, GRAY);
             break;
 
         case PANTALLA_FINAL:
