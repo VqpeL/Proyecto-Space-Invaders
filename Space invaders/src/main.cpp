@@ -2,6 +2,7 @@
 #include "background.h"
 #include "jugador.h"
 #include "aliens.h"
+#include "proyectil.h"
 #include <vector>
 
 enum EstadoJuego
@@ -13,17 +14,23 @@ enum EstadoJuego
 
 int main()
 {
+    // Colores
+
+    Color azulCeleste = {135, 206, 250, 255};
 
     bool reset = true;
     const int cantidad_estrellas = 80;
     const int anchoPantalla = 800;
-    const int altoPantalla = 600;
+    const int altoPantalla = 800;
     InitWindow(anchoPantalla, altoPantalla, "Space Invaders - Estructura de Pantallas");
     SetTargetFPS(60);
 
     // Crear structs o arreglos ----------------
 
     AlienGrid miGrid;
+
+    Proyectil *balasJugador = nullptr;
+    Proyectil *balasAliens = nullptr;
 
     Nave jugador;
 
@@ -34,6 +41,8 @@ int main()
     // Inicializar cosas globales ----------------
 
     Estrella *misEstrellas = InicializarBackground(cantidad_estrellas, anchoPantalla, altoPantalla);
+    IniciaAlienGrid(&miGrid, 5, 10);
+    InicializarNave(&jugador, anchoPantalla, altoPantalla);
 
     // Inicializar cosas globales ----------------
 
@@ -62,12 +71,31 @@ int main()
 
             if (reset)
             {
+
                 IniciaAlienGrid(&miGrid, 5, 10);
                 InicializarNave(&jugador, anchoPantalla, altoPantalla);
                 reset = false;
             }
+
             ActualizarNave(&jugador, anchoPantalla);
             ActualizarAlienGrid(&miGrid, anchoPantalla);
+            ActualizarProyectiles(&balasJugador, altoPantalla);
+            ActualizarProyectiles(&balasAliens, altoPantalla);
+
+            if (IsKeyPressed(KEY_SPACE))
+            {
+                Vector2 pos = {jugador.posicion.x + 20, jugador.posicion.y};
+                Disparar(&balasJugador, pos, -7.0f); // Velocidad negativa = SUBE
+            }
+
+            if (GetRandomValue(0, 100) < 4)
+            { // 2% de probabilidad por frame
+                // Aquí elegiríamos un alien al azar de la matriz, por ahora un punto fijo:
+                int col_aliens = miGrid.num_col;
+                int filas_aliens = miGrid.num_filas;
+                Vector2 posAlien = AlienAleatorio(&miGrid, filas_aliens, col_aliens);
+                Disparar(&balasAliens, posAlien, 5.0f); // Velocidad positiva = BAJA
+            }
 
             if (IsKeyPressed(KEY_G))
             {
@@ -79,6 +107,8 @@ int main()
 
             if (!reset)
             {
+                LiberarProyectiles(&balasJugador);
+                LiberarProyectiles(&balasAliens);
                 LiberarAlienGrid(&miGrid);
                 LiberarNave(&jugador);
                 reset = true;
@@ -121,6 +151,9 @@ int main()
                 DibujarAlienGrid(&miGrid);
 
                 DibujarNave(&jugador);
+
+                DibujarProyectiles(balasJugador, YELLOW);
+                DibujarProyectiles(balasAliens, azulCeleste);
             }
 
             break;
@@ -141,6 +174,10 @@ int main()
 
     // Para cerrar el programa ------------
 
+    LiberarProyectiles(&balasJugador);
+    LiberarProyectiles(&balasAliens);
+    LiberarAlienGrid(&miGrid);
+    LiberarNave(&jugador);
     LiberarBackground(misEstrellas);
     CloseWindow();
     return 0;

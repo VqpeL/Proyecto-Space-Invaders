@@ -28,6 +28,8 @@ typedef struct {
 void IniciaAlienGrid(AlienGrid *grid, int filas, int col);
 void ActualizarAlienGrid(AlienGrid *grid, int ancho_pantalla);
 void DibujarAlienGrid(AlienGrid *grid);
+Vector2 AlienAleatorio(AlienGrid *grid, int filas, int col);
 void LiberarAlienGrid(AlienGrid *grid); // <-- ¡La pieza que les faltaba!
+
 
 #endif

@@ -3,7 +3,7 @@
 
 const float ancho_alien = 30.0f;
 const float alto_alien = 20.0f;
-float vel_max = 10.0f;
+const float vel_max = 10.0f;
 
 
 void IniciaAlienGrid(AlienGrid *grid, int filas, int col) {
@@ -58,7 +58,7 @@ void ActualizarAlienGrid(AlienGrid *grid,int ancho_pantalla) {
         }
     }
 
-    grid->vel = 1.5f + (vel_max - 1.5f) * ((float)aliens_muertos / total_aliens);
+    grid->vel = 0.7f + (vel_max - 0.7f) * ((float)aliens_muertos / total_aliens);
 
     // 1. Mover y verificar colisión con paredes laterales
     for (int i = 0; i < grid->num_filas; i++) {
@@ -78,7 +78,7 @@ void ActualizarAlienGrid(AlienGrid *grid,int ancho_pantalla) {
         grid->dirX *= -1; 
         for (int i = 0; i < grid->num_filas; i++) {
             for (int j = 0; j < grid->num_col; j++) {
-                grid->aliens[i][j].y += 8.0f; 
+                grid->aliens[i][j].y += 5.0f; 
             }
         }
     }
@@ -104,6 +104,30 @@ void DibujarAlienGrid(AlienGrid *grid) {
             }
         }
     }
+}
+
+
+Vector2 AlienAleatorio(AlienGrid *grid, int filas, int col) {
+    int pos_fila = 0;
+    int pos_col = 0;
+    bool alien_encontrado = false;
+    Vector2 pos_alien = { 0.0f, 0.0f };
+
+    // Bucle de seguridad: busca un alien al azar hasta encontrar uno que esté ACTIVO
+    while (!alien_encontrado) {
+        // CORRECCIÓN CRÍTICA: Restamos 1 para no salirnos de los límites del malloc
+        pos_fila = GetRandomValue(0, filas - 1);
+        pos_col = GetRandomValue(0, col - 1);
+
+        // Si el alien en esa posición está vivo, lo tomamos
+        if (grid->aliens[pos_fila][pos_col].activo) {
+            pos_alien.x = grid->aliens[pos_fila][pos_col].x + 20.0f;
+            pos_alien.y = grid->aliens[pos_fila][pos_col].y + 19.0f;
+            alien_encontrado = true; // Rompe el ciclo while
+        }
+    }
+
+    return pos_alien;
 }
 
 // ¡FUNCIÓN ESENCIAL PARA EL PROYECTO!
