@@ -160,3 +160,28 @@ bool GridVacia(AlienGrid *grid) {
     }
     return true; // Todos los aliens están muertos
 }
+
+bool AlienSalioPantalla(AlienGrid *grid, int altoPantalla) {
+    if (grid->aliens == NULL) {
+        return false;
+    }
+
+    for (int fila = 0; fila < grid->num_filas; fila++) {
+        for (int col = 0; col < grid->num_col; col++) {
+
+            if (grid->aliens[fila][col].activo) {
+
+                float parteBajaAlien = grid->aliens[fila][col].y + grid->aliens[fila][col].alto;
+
+                // CAMBIO:
+                // El Game Over ocurre solo cuando el alien ya salió por abajo
+                // de la pantalla, no cuando toca la nave.
+                if (parteBajaAlien >= altoPantalla) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}

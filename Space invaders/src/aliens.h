@@ -31,6 +31,5 @@ void DibujarAlienGrid(AlienGrid *grid);
 Vector2 AlienAleatorio(AlienGrid *grid, int filas, int col);
 void LiberarAlienGrid(AlienGrid *grid); // <-- ¡La pieza que les faltaba!
 bool GridVacia(AlienGrid *grid);
-
-
+bool AlienSalioPantalla(AlienGrid *grid, int altoPantalla);
 #endif

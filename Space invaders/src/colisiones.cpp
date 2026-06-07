@@ -71,6 +71,11 @@ void ColisionAlienNave(Nave *jugador, AlienGrid *grid) {
                 };
 
                 if (CheckCollisionRecs(rectNave, rectAlien)) {
+                    jugador->vidas--; 
+                    if (jugador->vidas < 0) { //por si acaso para evitar el -1.
+                        jugador->vidas = 0;
+                    }
+
                     grid->aliens[fila][col].activo = false;
                     return; 
                 }

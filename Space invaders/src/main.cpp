@@ -4,7 +4,9 @@
 #include "aliens.h"
 #include "proyectil.h"
 #include "colisiones.h"
+#include "cobertura.h"
 #include <vector>
+
 
 enum EstadoJuego
 {
@@ -35,6 +37,7 @@ int main()
     Proyectil *balasAliens = nullptr;
 
     Nave jugador;
+    Cobertura coberturas[MAX_COBERTURAS];
 
     EstadoJuego estadoActual = PANTALLA_INICIO;
 
@@ -76,6 +79,9 @@ int main()
 
                 IniciaAlienGrid(&miGrid, 5, 10);
                 InicializarNave(&jugador, anchoPantalla, altoPantalla);
+
+                //coberturas
+                InicializarCoberturas(coberturas, MAX_COBERTURAS, anchoPantalla, altoPantalla);
                 reset = false;
             }
 
@@ -84,11 +90,22 @@ int main()
             ActualizarProyectiles(&balasJugador, altoPantalla);
             ActualizarProyectiles(&balasAliens, altoPantalla);
 
+            //primero revisamos eso
+            
+            ColisionProyectilesCoberturas(&balasJugador, coberturas, MAX_COBERTURAS);
+            ColisionProyectilesCoberturas(&balasAliens, coberturas, MAX_COBERTURAS);
+
+            ColisionAlienCobertura(&miGrid, coberturas, MAX_COBERTURAS);
             ColisionLaserAlien(&balasJugador, &miGrid);
             ColisionAlienNave(&jugador, &miGrid);
             ColisionProyectilEnemigoNave(&balasAliens, &jugador);
 
             if (jugador.vidas <= 0)
+            {
+                estadoActual = PANTALLA_FINAL;
+            }
+
+            if (AlienSalioPantalla(&miGrid, altoPantalla))
             {
                 estadoActual = PANTALLA_FINAL;
             }
@@ -180,6 +197,8 @@ int main()
 
                 DrawText(TextFormat("VIDAS: %d", jugador.vidas), anchoPantalla - 120, 20, 20, RED);
                 DibujarAlienGrid(&miGrid);
+
+                DibujarCoberturas(coberturas, MAX_COBERTURAS);
 
                 DibujarNave(&jugador);
 
