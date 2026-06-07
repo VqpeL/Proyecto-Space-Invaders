@@ -6,11 +6,12 @@ const float alto_alien = 20.0f;
 const float vel_max = 10.0f;
 
 
-void IniciaAlienGrid(AlienGrid *grid, int filas, int col) {
+void IniciaAlienGrid(AlienGrid *grid, int filas, int col, int nivel) {
 
     grid->num_col = col;
     grid->num_filas = filas;
     grid->dirX = 1.0f; 
+    grid->velNivel = 1.0f + ((nivel - 1) * 0.3f);
 
     // Carga de texturas en el arreglo de la estructura
     grid->textura[0] = LoadTexture("assets/graficos/alien_1.png");
@@ -64,7 +65,7 @@ void ActualizarAlienGrid(AlienGrid *grid,int ancho_pantalla) {
     for (int i = 0; i < grid->num_filas; i++) {
         for (int j = 0; j < grid->num_col; j++) {
             if (grid->aliens[i][j].activo) {
-                grid->aliens[i][j].x += grid->vel * grid->dirX;
+                grid->aliens[i][j].x += grid->dirX * 2.0f * grid->velNivel;
                 
                 if (grid->aliens[i][j].x < 20 || (grid->aliens[i][j].x + grid->aliens[i][j].ancho + 20) > ancho_pantalla) {
                     borde = true; 
@@ -130,9 +131,7 @@ Vector2 AlienAleatorio(AlienGrid *grid, int filas, int col) {
     return pos_alien;
 }
 
-// ¡FUNCIÓN ESENCIAL PARA EL PROYECTO!
 void LiberarAlienGrid(AlienGrid *grid) {
-    // 1. Liberar la memoria dinámica de la matriz (Heap)
     if (grid->aliens != NULL) {
         for (int i = 0; i < grid->num_filas; i++) {
             free(grid->aliens[i]); // Libera cada columna asignada
@@ -141,7 +140,6 @@ void LiberarAlienGrid(AlienGrid *grid) {
         grid->aliens = NULL;
     }
 
-    // 2. Descargar las texturas de la tarjeta gráfica (VRAM)
     for (int i = 0; i < 3; i++) {
         UnloadTexture(grid->textura[i]);
     }
@@ -154,7 +152,7 @@ bool GridVacia(AlienGrid *grid) {
     for (int i = 0; i < grid->num_filas; i++) {
         for (int j = 0; j < grid->num_col; j++) {
             if (grid->aliens[i][j].activo) {
-                return false; // Se encontró un alien vivo, no hay victoria todavía
+                return false;
             }
         }
     }

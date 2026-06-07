@@ -6,7 +6,7 @@
 #include "aliens.h"
 #include "proyectil.h"
 
-void ColisionLaserAlien(Proyectil** cabezaLasers, AlienGrid *grid);
+void ColisionLaserAlien(Proyectil** cabezaLasers, AlienGrid *grid, Sound sonidoMuerte);
 void ColisionAlienNave(Nave *jugador, AlienGrid *grid);
 void ColisionProyectilEnemigoNave(Proyectil** cabezaLasersAliens, Nave *jugador);
 

@@ -21,11 +21,12 @@ typedef struct {
     int num_filas;
     float dirX;
     float vel;
+    float velNivel;
     Texture2D textura[3];
 } AlienGrid;
 
 // Funciones corregidas con punteros de C puro (*)
-void IniciaAlienGrid(AlienGrid *grid, int filas, int col);
+void IniciaAlienGrid(AlienGrid *grid, int filas, int col, int nivel);
 void ActualizarAlienGrid(AlienGrid *grid, int ancho_pantalla);
 void DibujarAlienGrid(AlienGrid *grid);
 Vector2 AlienAleatorio(AlienGrid *grid, int filas, int col);

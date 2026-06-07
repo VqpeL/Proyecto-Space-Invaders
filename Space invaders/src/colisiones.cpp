@@ -1,7 +1,7 @@
 #include "colisiones.h"
 #include <stdlib.h>
 
-void ColisionLaserAlien(Proyectil** cabezaLasers, AlienGrid *grid) {
+void ColisionLaserAlien(Proyectil** cabezaLasers, AlienGrid *grid, Sound sonidoMuerte) {
     Proyectil* actual = *cabezaLasers;
     Proyectil* anterior = NULL;
     while (actual != NULL) {
@@ -26,6 +26,7 @@ void ColisionLaserAlien(Proyectil** cabezaLasers, AlienGrid *grid) {
 
                     if (CheckCollisionRecs(rectLaser, rectAlien)) {
                         grid->aliens[fila][col].activo = false; 
+                        PlaySound(sonidoMuerte);
                         Proyectil* aEliminar = actual;
                         if (anterior == NULL) {
                             *cabezaLasers = actual->siguiente;
