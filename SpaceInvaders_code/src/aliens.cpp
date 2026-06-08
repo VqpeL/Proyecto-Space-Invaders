@@ -162,20 +162,35 @@ Vector2 AlienAleatorio(AlienGrid *grid, int filas, int col)
 
 void LiberarAlienGrid(AlienGrid *grid)
 {
-    if (grid->aliens != NULL)
-    {
-        for (int i = 0; i < grid->num_filas; i++)
-        {
+    if (grid == NULL) {
+        return;
+    }
+
+    if (grid->aliens != NULL) {
+        for (int i = 0; i < grid->num_filas; i++) {
             free(grid->aliens[i]);
         }
+
         free(grid->aliens);
         grid->aliens = NULL;
     }
 
+    // Descargar texturas solo si realmente están cargadas
     for (int i = 0; i < 3; i++)
     {
-        UnloadTexture(grid->textura[i]);
+        if (grid->textura[i].id != 0)
+        {
+            UnloadTexture(grid->textura[i]);
+            grid->textura[i].id = 0;
+        }
     }
+
+    // Dejar el grid en estado seguro
+    grid->num_filas = 0;
+    grid->num_col = 0;
+    grid->dirX = 1.0f;
+    grid->vel = 0.0f;
+    grid->velNivel = 0.0f;
 }
 
 bool GridVacia(AlienGrid *grid)

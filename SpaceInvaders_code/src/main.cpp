@@ -53,7 +53,7 @@ int main()
 
     ConfigNivel datosNivel;
 
-    AlienGrid AliensGrid;
+    AlienGrid AliensGrid = {};
     AliensGrid.aliens = nullptr;
 
     Proyectil *balasJugador = nullptr;
