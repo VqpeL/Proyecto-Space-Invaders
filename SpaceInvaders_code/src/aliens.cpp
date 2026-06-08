@@ -123,14 +123,16 @@ void DibujarAlienGrid(AlienGrid *grid)
 
 Vector2 AlienAleatorio(AlienGrid *grid, int filas, int col)
 {
+
+    if (grid->aliens == nullptr || filas <= 0 || col <= 0)
+        return (Vector2){-1.0f, -1.0f};
+
     int pos_fila = 0;
     int pos_col = 0;
-    bool alien_encontrado = false;
-    Vector2 pos_alien = {0.0f, 0.0f};
+    Vector2 pos_alien = {-1.0f, -1.0f};
 
-    while (!alien_encontrado)
+    for (int intentos = 0; intentos < 40; intentos++)
     {
-
         pos_fila = GetRandomValue(0, filas - 1);
         pos_col = GetRandomValue(0, col - 1);
 
@@ -138,7 +140,20 @@ Vector2 AlienAleatorio(AlienGrid *grid, int filas, int col)
         {
             pos_alien.x = grid->aliens[pos_fila][pos_col].x + 20.0f;
             pos_alien.y = grid->aliens[pos_fila][pos_col].y + 19.0f;
-            alien_encontrado = true;
+            return pos_alien;
+        }
+    }
+
+    for (int f = 0; f < filas; f++)
+    {
+        for (int c = 0; c < col; c++)
+        {
+            if (grid->aliens[f][c].activo)
+            {
+                pos_alien.x = grid->aliens[f][c].x + 20.0f;
+                pos_alien.y = grid->aliens[f][c].y + 19.0f;
+                return pos_alien;
+            }
         }
     }
 

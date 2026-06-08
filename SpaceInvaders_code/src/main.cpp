@@ -195,13 +195,23 @@ int main()
             }
 
             // Disparo aleatorio de los aliens
-            if (GetRandomValue(0, 100) < datosNivel.frecuencia_disparo)
+            if (AliensGrid.aliens != nullptr && !GridVacia(&AliensGrid))
             {
-                int col_aliens = AliensGrid.num_col;
-                int filas_aliens = AliensGrid.num_filas;
-                Vector2 posAlien = AlienAleatorio(&AliensGrid, filas_aliens, col_aliens);
-                Disparar(&balasAliens, posAlien, 5.0f);
-                PlaySound(sonidoLaserAlien);
+                if (GetRandomValue(0, 100) < datosNivel.frecuencia_disparo)
+                {
+                    int col_aliens = AliensGrid.num_col;
+                    int filas_aliens = AliensGrid.num_filas;
+
+
+                    Vector2 posAlien = AlienAleatorio(&AliensGrid, filas_aliens, col_aliens);
+
+
+                    if (posAlien.x >= 0 && posAlien.y >= 0)
+                    {
+                        Disparar(&balasAliens, posAlien, 5.0f);
+                        PlaySound(sonidoLaserAlien);
+                    }
+                }
             }
 
             // Sonido si el jugador recibe daño
