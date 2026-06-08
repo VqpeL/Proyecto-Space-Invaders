@@ -1,13 +1,11 @@
 #include "Background.h"
-#include <stdlib.h> // OBLIGATORIO para usar malloc y free
+#include <stdlib.h>
 
-// 1. Reservamos memoria dinámica y llenamos las estrellas
 Estrella *InicializarBackground(int cantidad_estrellas, int ancho, int alto)
 {
-    // REQUISITO: Asignación dinámica de memoria
+
     Estrella *estrellas = (Estrella *)malloc(cantidad_estrellas * sizeof(Estrella));
 
-    // Buenas prácticas de C: Verificar si la computadora nos dio la memoria
     if (estrellas == NULL)
     {
         return NULL;
@@ -35,13 +33,12 @@ Estrella *InicializarBackground(int cantidad_estrellas, int ancho, int alto)
         }
     }
 
-    return estrellas; // Devolvemos el bloque de memoria dinámico listo
+    return estrellas;
 }
 
-// 2. Movemos las estrellas (el acceso con estrellas[i] funciona exactamente igual)
 void ActualizarBackground(Estrella *estrellas, int cantidad_estrellas, int ancho, int alto)
 {
-    // Si por alguna razón el puntero está vacío, no hacemos nada para evitar un crash
+
     if (estrellas == NULL)
         return;
 
@@ -57,7 +54,6 @@ void ActualizarBackground(Estrella *estrellas, int cantidad_estrellas, int ancho
     }
 }
 
-// 3. Dibujamos las estrellas
 void DibujarBackground(Estrella *estrellas, int cantidad_estrellas)
 {
     if (estrellas == NULL)
@@ -69,11 +65,10 @@ void DibujarBackground(Estrella *estrellas, int cantidad_estrellas)
     }
 }
 
-// 4. Liberamos la memoria de la pila dinámica (Heap)
 void LiberarBackground(Estrella *estrellas)
 {
     if (estrellas != NULL)
     {
-        free(estrellas); // Devuelve la memoria al sistema operativo
+        free(estrellas);
     }
 }

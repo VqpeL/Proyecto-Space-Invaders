@@ -3,8 +3,8 @@
 
 #include "raylib.h"
 
-// En C, definimos el struct de esta manera
-typedef struct {
+typedef struct
+{
     Vector2 posicion;
     float velocidad;
     float ancho;
@@ -13,7 +13,6 @@ typedef struct {
     Texture2D textura;
 } Nave;
 
-// Funciones globales que reciben la nave como parámetro
 void InicializarNave(Nave *nave, int anchoPantalla, int altoPantalla);
 void ActualizarNave(Nave *nave, int anchoPantalla);
 void DibujarNave(Nave *nave);

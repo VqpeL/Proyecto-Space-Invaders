@@ -1,124 +1,142 @@
 #include "colisiones.h"
 #include <stdlib.h>
 
-void ColisionLaserAlien(Proyectil** cabezaLasers, AlienGrid *grid, Sound sonidoMuerte) {
-    Proyectil* actual = *cabezaLasers;
-    Proyectil* anterior = NULL;
-    while (actual != NULL) {
+void ColisionLaserAlien(Proyectil **cabezaLasers, AlienGrid *grid, Sound sonidoMuerte)
+{
+    Proyectil *actual = *cabezaLasers;
+    Proyectil *anterior = NULL;
+    while (actual != NULL)
+    {
         Rectangle rectLaser = {
             actual->posicion.x,
             actual->posicion.y,
             actual->ancho,
-            actual->alto
-        };
+            actual->alto};
 
         bool balaEliminada = false;
-        for (int fila = 0; fila < grid->num_filas; fila++) {
-            for (int col = 0; col < grid->num_col; col++) {
-                if (grid->aliens[fila][col].activo) {
+        for (int fila = 0; fila < grid->num_filas; fila++)
+        {
+            for (int col = 0; col < grid->num_col; col++)
+            {
+                if (grid->aliens[fila][col].activo)
+                {
 
                     Rectangle rectAlien = {
                         grid->aliens[fila][col].x,
                         grid->aliens[fila][col].y,
                         grid->aliens[fila][col].ancho,
-                        grid->aliens[fila][col].alto
-                    };
+                        grid->aliens[fila][col].alto};
 
-                    if (CheckCollisionRecs(rectLaser, rectAlien)) {
-                        grid->aliens[fila][col].activo = false; 
+                    if (CheckCollisionRecs(rectLaser, rectAlien))
+                    {
+                        grid->aliens[fila][col].activo = false;
                         PlaySound(sonidoMuerte);
-                        Proyectil* aEliminar = actual;
-                        if (anterior == NULL) {
+                        Proyectil *aEliminar = actual;
+                        if (anterior == NULL)
+                        {
                             *cabezaLasers = actual->siguiente;
-                        } else {
+                        }
+                        else
+                        {
                             anterior->siguiente = actual->siguiente;
                         }
-                        
+
                         actual = actual->siguiente;
-                        free(aEliminar); 
-                        
+                        free(aEliminar);
+
                         balaEliminada = true;
-                        break; 
+                        break;
                     }
                 }
             }
-            if (balaEliminada) break; 
+            if (balaEliminada)
+                break;
         }
 
-        if (!balaEliminada) {
+        if (!balaEliminada)
+        {
             anterior = actual;
             actual = actual->siguiente;
         }
     }
 }
 
-void ColisionAlienNave(Nave *jugador, AlienGrid *grid) {
+void ColisionAlienNave(Nave *jugador, AlienGrid *grid)
+{
     Rectangle rectNave = {
         jugador->posicion.x,
         jugador->posicion.y,
         jugador->ancho,
-        jugador->alto
-    };
+        jugador->alto};
 
-    for (int fila = 0; fila < grid->num_filas; fila++) {
-        for (int col = 0; col < grid->num_col; col++) {
-            if (grid->aliens[fila][col].activo) {
-                
+    for (int fila = 0; fila < grid->num_filas; fila++)
+    {
+        for (int col = 0; col < grid->num_col; col++)
+        {
+            if (grid->aliens[fila][col].activo)
+            {
+
                 Rectangle rectAlien = {
                     grid->aliens[fila][col].x,
                     grid->aliens[fila][col].y,
                     grid->aliens[fila][col].ancho,
-                    grid->aliens[fila][col].alto
-                };
+                    grid->aliens[fila][col].alto};
 
-                if (CheckCollisionRecs(rectNave, rectAlien)) {
-                    jugador->vidas--; 
-                    if (jugador->vidas < 0) { //por si acaso para evitar el -1.
+                if (CheckCollisionRecs(rectNave, rectAlien))
+                {
+                    jugador->vidas--;
+                    if (jugador->vidas < 0)
+                    {
                         jugador->vidas = 0;
                     }
 
                     grid->aliens[fila][col].activo = false;
-                    return; 
+                    return;
                 }
             }
         }
     }
 }
 
-void ColisionProyectilEnemigoNave(Proyectil** cabezaLasersAliens, Nave *jugador) {
-    Proyectil* actual = *cabezaLasersAliens;
-    Proyectil* anterior = NULL;
+void ColisionProyectilEnemigoNave(Proyectil **cabezaLasersAliens, Nave *jugador)
+{
+    Proyectil *actual = *cabezaLasersAliens;
+    Proyectil *anterior = NULL;
 
     Rectangle rectNave = {
         jugador->posicion.x,
         jugador->posicion.y,
         jugador->ancho,
-        jugador->alto
-    };
+        jugador->alto};
 
-    while (actual != NULL) {
+    while (actual != NULL)
+    {
         Rectangle rectLaser = {
             actual->posicion.x,
             actual->posicion.y,
             actual->ancho,
-            actual->alto
-        };
+            actual->alto};
 
-        if (CheckCollisionRecs(rectLaser, rectNave)) {
+        if (CheckCollisionRecs(rectLaser, rectNave))
+        {
             jugador->vidas--;
-            Proyectil* aEliminar = actual;
-            if (anterior == NULL) {
+            Proyectil *aEliminar = actual;
+            if (anterior == NULL)
+            {
                 *cabezaLasersAliens = actual->siguiente;
-            } else {
+            }
+            else
+            {
                 anterior->siguiente = actual->siguiente;
             }
-            
+
             actual = actual->siguiente;
-            free(aEliminar); 
-            
-            // Si quieres que solo le afecte un impacto por frame, salimos de la función
-            return; 
-        } else {
+            free(aEliminar);
+
+            return;
+        }
+        else
+        {
             anterior = actual;
             actual = actual->siguiente;
         }
